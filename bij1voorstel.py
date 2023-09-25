@@ -64,6 +64,12 @@ diff = df.Samenvatting.isin(df_old.Samenvatting)
 def fetch_value(df, ix, label):
 	return df.loc[[ix]][label].to_string(index=False)
 
+f = open("index.html", "w").close()
+with open('head.html','r') as headfile, open('index.html','a') as f:
+    for line in headfile:
+             f.write(line)
+f.close()
+
 counter = 0
 found_new = False
 for row in diff:
@@ -94,10 +100,26 @@ Voorstel: {}
 Toelichting: {}
 
 		'''.format(I, C,  A, B, D, E, F, G, H)
+
+		html_block = '''\
+
+<h1>Voorstel {}</h1> 
+
+<h2>{}</h2>
+
+<p>Ingediend door {} ({}),</p>
+
+<p>Betreft de tekst: {} (p. {}, regels {})</p>
+
+<p>Voorstel: {}</p>
+
+<p>Toelichting: {}</p>
+
+		'''.format(I, C,  A, B, D, E, F, G, H)
 		print(message)
-		# Gooi dit ook even in een markdown file
-		f = open("voorstellen.md", "a")
-		print(message, file=f)
+		# Gooi dit ook even in de index.html file
+		f = open("index.html", "a")
+		print(html_block, file=f)
 		f.close()
 		# matrix_message(message) # uncomment if you want Matrix messages to be broadcast
 		df.loc[[counter + 1]].to_csv('voorstellen.csv', mode='a', index=False, header=False)
@@ -105,6 +127,11 @@ Toelichting: {}
 
 if found_new == False:
 	print ("No new amendments found")
+
+with open('footer.html','r') as footfile, open('index.html','a') as f:
+    for line in footfile:
+             f.write(line)
+f.close()
 
 
 #Let's do some stats
